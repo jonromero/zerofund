@@ -1,0 +1,553 @@
+<!DOCTYPE HTML>
+<!--__________                 ___________                .___
+\____    /___________  ____\_   _____/_ __  ____    __| _/
+  /     // __ \_  __ \/  _ \|    __)|  |  \/    \  / __ | 
+ /     /\  ___/|  | \(  <_> )     \ |  |  /   |  \/ /_/ | 
+/_______ \___  >__|   \____/\___  / |____/|___|  /\____ | 
+        \/   \/                 \/             \/      \/ 
+Welcome to ZeroFund kickstarter-like page. Please search for NOTE and read what you have to do.
+You will have to modify this page with content relative to your page. 
+There are no guidelines on how to do it because if you cannot modify a static HTML page 
+most probably you shouldn't spend your time talking tech startups.
+Add photos, a video, links to social media, description of your product and your team. 
+You may even modify the look and feel of the page just DO NOT touch Javascript. I warned you!
+Good luck!
+-->
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Zerofund.org</title>
+
+<!-- // Webfont -->
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,700,700italic,400italic">
+
+<!-- // CSS -->
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/nivo-slider.css">
+<link rel="stylesheet" href="css/font-awesome.css">
+<link rel="stylesheet" href="css/alertify.core.css">
+<link rel="stylesheet" href="css/alertify.default.css">
+
+<!--[if IE 8]>
+<style type="text/css">@import url(css/ie8.css);</style>
+<![endif]-->
+<!--[if IE 7]>
+<style type="text/css">@import url(css/ie7.css);</style>
+<![endif]-->
+
+<!-- // JavaScript (All JavaScript at the bottom, except this Modernizr build.) -->
+<script src="js/libs/modernizr-2.0.6.js"></script>
+<script src="js/alertify.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+<script src="http://www.parsecdn.com/js/parse-1.1.15.min.js"></script>
+<script type="text/javascript">
+    // NOTE: Modify the following values
+    var name = 'Awesome Startup';
+    var url = 'http://6pna.com';
+    // Initialize Parse
+    Parse.initialize("FNWbbpkez3ZSyErI3IEbOwrCeJsuxaNKnC14neT7", "SIAdJGSpRcVcwDao83Ruw0XPpe8GXSrbWr4Sz4lo");
+    $(function(){
+        $('title').text('Back '+name+' on Zerofund!')
+        // Parse objects
+        window.currentUser = Parse.User.current();
+        window.user = new Parse.User(); // if signup
+        var Startup = Parse.Object.extend("Startup");
+        var Vote = Parse.Object.extend("Vote");
+        // Create the startup entry
+        var query = new Parse.Query(Startup);
+        query.equalTo("name", name);
+        query.find({
+            success: function(results) {
+                if (results.length>0) window.startup = results[0];
+                else {
+                    window.startup = new Startup();
+                    startup.set("name", name);
+                    startup.set("url", url);
+                    if (document.URL.indexOf('zerofund.org')>0) startup.set("page_url", document.URL);
+                    startup.save();
+                }
+            }
+        });
+
+        // Get total statistics
+        // Vote and login if needed
+        $('#cta a').click(function(ev){
+            ev.preventDefault();
+            if (currentUser) {
+                var query = new Parse.Query(Vote);
+                query.equalTo("parent", window.currentUser);
+                query.equalTo("startup", window.startup);
+                query.find({
+                  success: function(results) {
+                    if (results.length > 0){
+                        var msg = 'You have already backed '+window.startup.get('name');
+                        $('#cta a').html(msg);
+                        alertify.error(msg);
+                    } else {
+                        // Prompt to vote
+                        // Check if this user has voted for this startup
+                        alertify.prompt( 'If could fund '+startup.get('name')+' right now, how many Euros out of your pocket would you give them?', function (e, str) {
+                            if (e) {
+                                if (parseInt(e)==NaN){
+                                    alertify.error( 'We need a number. Dont cheat!' );
+                                } else {
+                                    var vote = new Vote();
+                                    vote.set("amount", parseInt(str));
+                                    vote.set("parent", window.currentUser);
+                                    vote.set("startup", window.startup);
+                                    vote.save();
+                                    alertify.success( 'You are the man!' );
+                                    $('#cta a').html('Thanks a lot!');
+                                    statistics();
+
+                                    // Facebook publisher
+                                    FB.ui({
+                                       method: 'feed',
+                                       name: $('title').text(),
+                                       caption: "Stop talking! Support startups today!",
+                                       description: $('#accordion p:first').text(),
+                                       link: document.URL,
+                                       picture: $('#slider img:first').attr('src')
+                                      },
+                                      function(response) {console.log(response);
+                                        if (response && response.post_id) {
+                                          alertify.success("You are truly awesome!");
+                                        } else {
+                                          alertify.error("Oops. It seems you have to share manually!");
+                                        }
+                                    });
+                                }
+                            } else {
+                                alertify.error( 'Y U NO BACK?' );
+                            }
+                        });
+
+                    }
+                  },
+                  error: function(error) {
+                    alertify.error("Error: " + error.code + " " + error.message);
+                  }
+                });
+            } else {
+                alertify.set({ labels: { ok: "Login", cancel: "Singup" } });
+                alertify.confirm( 'Please login in order to back '+startup.get('name'), function (e) {
+                    if (e) {
+                        login();
+                    } else {
+                        signup();
+                    }
+                });
+            }
+        });
+        // Show Backers and total amount
+        window.statistics_query = new Parse.Query(Vote);
+        statistics();
+
+        // Days Left
+        var today = new Date();
+        var BigDay = new Date("March 20, 2013");
+        var timeLeft = (BigDay.getTime() - today.getTime());
+        $('#daysLeft').text(Math.floor(timeLeft / (24 * 60 * 60 * 1000)));
+
+    });
+    var statistics = function(){
+        window.statistics_query.equalTo("startup", window.startup);
+        window.statistics_query.find({
+            success: function(results) {
+                var total = 0;
+                var backers = results.length;
+
+                for (var i=0; i<backers; i++) total += results[i].get('amount');
+                $('#backers').text(backers);
+                $('#amount').html(total+'&euro;');
+            }
+        });
+    }
+    var login = function(){
+        alertify.set({ labels: { ok: "Submit", cancel: "Cancel" } });
+        alertify.prompt( 'Email', function (e, str) {
+            if (e) {
+                alertify.success('Thanks.')
+                user.set('email', str);
+                alertify.prompt( 'Password', function (e, str) {
+                    if (e) {
+                        user.set('password', str);
+                        Parse.User.logIn(user.get('email').trim(), user.get('password').trim(), {
+                            success: function(user) {
+                                window.currentUser = Parse.User.current();
+                                alertify.success( 'Welcome back to Zerofund!' );
+                                $('#cta a').click();
+                            },
+                            error: function(user, error) {
+                                alertify.error( 'You stranger, try again!' );
+                                $('#cta a').click();
+                            }
+                        });
+                    } else {
+                        alertify.error( 'BECAUSE NO CLEAR?' );
+                    }
+                });
+            } else {
+                alertify.error( 'Y U STOP?' );
+            }
+        });
+    }
+    var signup = function(){
+        alertify.set({ labels: { ok: "Submit", cancel: "Cancel" } });
+        alertify.prompt( 'Email', function (e, str) {
+            if (e) {
+                alertify.success('Thanks.')
+                user.set('email', str);
+                user.set('username', str);
+                alertify.prompt( 'Password', function (e, str) {
+                    if (e) {
+                        user.set('password', str);
+                        user.signUp(null, {
+                            success: function(user) {
+                                window.currentUser = Parse.User.current();
+                                alertify.success( "Welcome to Zerofund! Let's back "+startup.get('name') );
+                                $('#cta a').click();
+                            },
+                            error: function(user, error) {
+                                // Show the error message somewhere and let the user try again.
+                                alertify.error("Error: " + error.code + " " + error.message);
+                            }
+                        });
+                    } else {
+                        alertify.error( 'BECAUSE NO CLEAR?' );
+                    }
+                });
+            } else {
+                alertify.error( 'Y U STOP?' );
+            }
+        });
+    }
+</script>
+</head>
+
+<body>
+
+<!-- Outer Wrapper -->
+<div id="wrapper-outer">
+	
+	<!-- Inner Wrapper -->
+	<div id="wrapper-inner">
+	
+		<!-- Header -->
+		<header id="header">
+		
+			<!-- Logo -->
+			<div id="logo"></div>
+			<!-- Logo END -->
+		
+			<!-- Social -->
+            <!-- NOTE: ADD LINKS TO YOUR SOCIAL MEDIA -->
+			<ul class="social">
+				<li><a href="#"><i class="icon-facebook"></i></a></li>
+				<li><a href="#"><i class="icon-twitter"></i></a></li>
+				<li><a href="#"><i class="icon-linkedin"></i></a></li>
+				<li><a href="#"><i class="icon-google-plus"></i></a></li>
+			</ul>
+			<!-- Social END -->
+			
+			<div class="clearfix"></div>
+			
+		</header>
+		<!-- Header END -->
+		
+		<!-- Hero -->
+		<div id="hero">
+		
+			<!-- Slider -->
+            <!-- NOTE: add images of your company and/or product -->
+			<div id="slider" class="nivoSlider">
+				<img src="images/dummy-slide-1.png" alt="" title="#slider-caption">
+				<img src="images/dummy-slide-1.png" alt="" title="#slider-caption">
+				<img src="images/dummy-slide-1.png" alt="" title="#slider-caption">
+				<img src="images/dummy-slide-1.png" alt="" title="#slider-caption">
+			</div>
+			<div id="slider-caption" class="nivo-html-caption">
+                <!-- NOTE: appeal to backers! -->
+				<p>We have the ideas, you have the money.<br/> <span>Help us by backing our great project today!</span></p>
+			</div>
+			<!-- Slider END -->
+			
+			<!-- Info Bar -->
+			<div id="infobar">
+				<p>
+                    <span><i class="icon-group"></i> <strong id='backers'></strong> Backers </span>
+                    <span><i class="icon-briefcase"></i> <strong id='amount'></strong> 
+                    <span><i class="icon-time"></i> <strong id='daysLeft'>20</strong> days left</span>
+                </p>
+			</div>
+			<!-- Info Bar END -->
+			
+		</div>
+		<!-- Hero END -->
+		
+		<!-- Teasers END -->
+		
+		<!-- Main -->
+		<div id="main">
+		
+			<!-- Info -->
+			<div id="info">
+				
+				<!-- Video -->
+				<div id="video">
+					<iframe src="http://player.vimeo.com/video/23534361?title=0&amp;byline=0&amp;portrait=0&amp;color=77bb44" width="440" height="248" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+				</div>
+				<!-- Video END -->
+				
+				<!-- Accordion -->
+                <!-- NOTE: tell us what is great about your product and your team -->
+				<div id="accordion">
+
+					<!-- Item 1 -->
+					<div>
+						<h2>About our great project</h2>
+						<div>
+							<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti.</p>
+							<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis. Maecenas consequat faucibus elit. Aenean elit mauris, luctus id, gravida ut, iaculis eu, urna. Morbi eros augue, dapibus eu, accumsan ut, cursus ac, magna.</p>
+							<p>Nam facilisis dui at nunc. Suspendisse potenti. Aliquam elit. Sed accumsan. Phasellus orci. Phasellus ac est vel dolor pharetra pulvinar. Curabitur scelerisque feugiat velit. Ut feugiat tincidunt felis.</p>
+						</div>
+					</div>
+					<!-- Item 1 END -->
+					
+					<!-- Item 2 -->
+					<div>
+						<h2>Features</h2>
+						<div>
+							<article class="featureitem">
+								
+								<h3>Lorem ipsum dolor</h3>
+								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis.</p>
+							</article>
+							<article class="featureitem">
+								
+								<h3>Lorem ipsum dolor</h3>
+								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis.</p>
+							</article>
+							<article class="featureitem">
+								
+								<h3>Lorem ipsum dolor</h3>
+								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis.</p>
+							</article>
+							<article class="featureitem">
+							
+								<h3>Lorem ipsum dolor</h3>
+								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis.</p>
+							</article>
+							<article class="featureitem">
+								
+								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis.</p>
+							</article>
+						</div>
+					</div>
+					<!-- Item 2 END -->
+					
+					<!-- Item 3 -->
+					<div>
+						<h2>FAQ</h2>
+						<div>
+							<article class="faqitem">
+								<h3><i class="icon-question-sign"></i>Is this is a question?</h3>
+								<p>Yep! And this is the answer! Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum.</p>
+							</article>
+							<article class="faqitem">
+								<h3><i class="icon-question-sign"></i>Is this is a question?</h3>
+								<p>Yep! And this is the answer! Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum.</p>
+							</article>
+							<article class="faqitem">
+								<h3><i class="icon-question-sign"></i>Is this is a question?</h3>
+								<p>Yep! And this is the answer! Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum.</p>
+							</article>
+							<article class="faqitem">
+								<h3><i class="icon-question-sign"></i>Is this is a question?</h3>
+								<p>Yep! And this is the answer! Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum.</p>
+							</article>
+							<article class="faqitem">
+								<h3><i class="icon-question-sign"></i>Is this is a question?</h3>
+								<p>Yep! And this is the answer! Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum.</p>
+							</article>
+						</div>
+					</div>
+					<!-- Item 3 END -->
+					
+					<!-- Item 4 -->
+                    <!-- NOTE: This is the News section. You eithere remove it, replace or make it work ;-)
+                    (remember this is a static page) -->
+					<div>
+						<h2>News</h2>
+						<div>
+							<article class="newsitem">
+								<h3><i class="icon-comment-alt"></i><a href="#">Lorem ipsum dolor sit amet</a> <span>August 22nd 2012</span></h3>
+								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti.</p>
+							</article>
+							<article class="newsitem">
+								<h3><i class="icon-comment-alt"></i><a href="#">Lorem ipsum dolor sit amet</a> <span>August 22nd 2012</span></h3>
+								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti.</p>
+							</article>
+							<article class="newsitem">
+								<h3><i class="icon-comment-alt"></i><a href="#">Lorem ipsum dolor sit amet</a> <span>August 22nd 2012</span></h3>
+								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti.</p>
+							</article>
+							<article class="newsitem">
+								<h3><i class="icon-comment-alt"></i><a href="#">Lorem ipsum dolor sit amet</a> <span>August 22nd 2012</span></h3>
+								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti.</p>
+							</article>
+							<article class="newsitem">
+								<h3><i class="icon-comment-alt"></i><a href="#">Lorem ipsum dolor sit amet</a> <span>August 22nd 2012</span></h3>
+								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti.</p>
+							</article>
+						</div>
+					</div>
+					<!-- Item 4 END -->
+					
+				</div>
+				<!-- Accordion END -->
+				
+			</div>
+			<!-- Info END -->
+			
+			<!-- Pledge -->
+			<div id="pledge">
+			
+				<!-- Call to Action -->
+				<div id="cta">
+                    <!-- NOTE: you define the call to action -->
+					<p>"Shut up and take my money!"</p>
+					<a href="#">Back this project <span>minimum pledge is $1</span></a>
+				</div>
+				<!-- Call to Action END -->
+			</div>
+			<!-- Pledge END -->
+			
+			<div class="clearfix"></div>
+			
+		</div>
+		<!-- Main END -->
+		
+		<!-- Team -->
+		<div id="team">
+			
+			<!-- Section Title -->
+			<h2>Our team</h2>
+			<!-- Section Title END -->
+
+		    <!-- NOTE: Tell us about your team! -->
+			<!-- Team Box 1 -->
+			<div class="teambox">
+				<img src="images/dummy-teamster.gif" alt="">
+				<h3>John Doe <span>CEO</span></h3>
+				<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis. Maecenas consequat faucibus elit. Aenean elit mauris, luctus id, gravida ut, iaculis eu, urna. Morbi eros augue, dapibus eu, accumsan ut, cursus ac, magna.</p>
+				<ul class="social">
+					    <li><a href="#"><i class="icon-facebook"></i></a></li>
+                        <li><a href="#"><i class="icon-twitter"></i></a></li>
+                        <li><a href="#"><i class="icon-linkedin"></i></a></li>
+                        <li><a href="#"><i class="icon-google-plus"></i></a></li>
+				</ul>
+				<div class="clearfix"></div>
+			</div>
+			<!-- Team Box 1 END -->
+			
+			<!-- Team Box 2 -->
+			<div class="teambox">
+				<img src="images/dummy-teamster.gif" alt="">
+				<h3>Jane Smith <span>Design</span></h3>
+				<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis. Maecenas consequat faucibus elit. Aenean elit mauris, luctus id, gravida ut, iaculis eu, urna. Morbi eros augue, dapibus eu, accumsan ut, cursus ac, magna.</p>
+				<ul class="social">
+                        <li><a href="#"><i class="icon-facebook"></i></a></li>
+                        <li><a href="#"><i class="icon-twitter"></i></a></li>
+                        <li><a href="#"><i class="icon-linkedin"></i></a></li>
+                        <li><a href="#"><i class="icon-google-plus"></i></a></li>
+                </ul>
+				<div class="clearfix"></div>
+			</div>
+			<!-- Team Box 2 END -->
+			
+			<!-- Team Box 3 -->
+			<div class="teambox">
+				<img src="images/dummy-teamster.gif" alt="">
+				<h3>Paul Andrews <span>Code</span></h3>
+				<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis. Maecenas consequat faucibus elit. Aenean elit mauris, luctus id, gravida ut, iaculis eu, urna. Morbi eros augue, dapibus eu, accumsan ut, cursus ac, magna.</p>
+				<ul class="social">
+                        <li><a href="#"><i class="icon-facebook"></i></a></li>
+                        <li><a href="#"><i class="icon-twitter"></i></a></li>
+                        <li><a href="#"><i class="icon-linkedin"></i></a></li>
+                        <li><a href="#"><i class="icon-google-plus"></i></a></li>
+                </ul>
+				<div class="clearfix"></div>
+			</div>
+			<!-- Team Box 3 END -->
+			
+			<!-- Team Box 4 -->
+			<div class="teambox">
+				<img src="images/dummy-teamster.gif" alt="">
+				<h3>Stacey Parker <span>Online Marketing</span></h3>
+				<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis. Maecenas consequat faucibus elit. Aenean elit mauris, luctus id, gravida ut, iaculis eu, urna. Morbi eros augue, dapibus eu, accumsan ut, cursus ac, magna.</p>
+				<ul class="social">
+                        <li><a href="#"><i class="icon-facebook"></i></a></li>
+                        <li><a href="#"><i class="icon-twitter"></i></a></li>
+                        <li><a href="#"><i class="icon-linkedin"></i></a></li>
+                        <li><a href="#"><i class="icon-google-plus"></i></a></li>
+                </ul>
+				<div class="clearfix"></div>
+			</div>
+			<!-- Team Box 4 END -->
+			
+			<div class="clearfix"></div>
+			
+		</div>
+		<!-- Team END -->
+		
+		
+		<!-- Footer -->
+		<Footer id="footer">
+			<!-- As long as you use the default icons of this theme you are NOT allowed to change the "Some icons by icons8.com" text/link or to deleted it. The author of the icons needs to be attributed! -->
+			<p>Copyright 2013 backthis.</p>
+		</Footer>
+		<!-- Footer END -->
+		
+	</div>
+	<!-- Inner Wrapper END -->
+	
+</div>
+<!-- Outer Wrapper END -->
+
+<!-- // JavaScript (At the bottom for fast page loading.)  -->
+<script src="js/jquery-ui-1.8.23.custom.min.js"></script>
+<script src="js/jquery-back-to-top-plugin.js"></script>
+<script src="js/jquery.nivo.slider.pack.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$("#accordion").accordion({
+			header: "h2",
+			autoHeight: false
+		});
+		$.toTop();
+		$('#slider').nivoSlider({
+			animSpeed: 1000, // Slide transition speed (in ms)
+        	pauseTime: 4000, // How long each slide will show (in ms)
+			controlNav: false,
+			prevText: 'Prev',
+			nextText: 'Next'
+		});
+	});
+
+  // Load the SDK's source Asynchronously
+  // Note that the debug version is being actively developed and might 
+  // contain some type checks that are overly strict. 
+  // Please report such bugs using the bugs tool.
+  (function(d, debug){
+     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement('script'); js.id = id; js.async = true;
+     js.src = "http://connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
+     ref.parentNode.insertBefore(js, ref);
+   }(document, /*debug*/ false));
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+.nivo-directionNav a {
+	display: none;
+}
+.nivoSlider:hover .nivo-directionNav a {
+	display: block;
+}

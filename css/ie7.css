@@ -1,0 +1,18 @@
+.nivo-directionNav a {
+	display: none;
+}
+.nivoSlider:hover .nivo-directionNav a {
+	display: block;
+}
+.featureitem img {
+	margin: 40px 20px 10px 0px;
+}
+.featureitem:first-child img {
+	margin: 16px 20px 10px 0px;
+}
+.newsitem {
+	padding-top: 16px;
+}
+.faqitem {
+	padding-top: 16px;
+}
