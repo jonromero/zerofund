@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Funding Greek Startups">
+    <meta name="keywords" content="fund, startups, funding, kickstarter" />
+    <meta name="author" content="Zerofund">
+    <meta name="robots" content="index,follow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Styles -->
+	<link href="assets/css/bootstrap.css" rel="stylesheet">
+	<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/font-awesome.css">
+    <link href="assets/css/style-responsive-blue.css" rel="stylesheet">    
+    <link href="assets/css/style-switcher.css" rel="stylesheet">
+    <!-- Google Web Font-->
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+    <!--[if IE 7]><link rel="stylesheet" href="assets/css/font-awesome-ie7.css"><![endif]-->
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!-- fav icons -->
+    <link rel="shortcut icon" href="assets/img/favicon.png">
+</head>
+<body>
+  <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <i class="icon-reorder"></i>
+          </button>
+          <a class="brand" href="index.html"></a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li>
+                <a href="process.html" >Process</a>
+              </li>
+              <li>
+                <a href="advisors.html" class="active adv">Advisors</a>
+              </li>
+              <li>
+                <a href="helpers.html">Helpers</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+<div class="wrapper" style="background:#ffffff url(assets/img/bg.jpg); width:100%;">	
+	<div class="container">
+      <div class="row" id="header" style="margin-top: 135px;"></div><!--end row-->
+  </div>
+</div>
+<div class="advicon"><i class="icon-group"></i></div>
+<h3 class="advtitle">{{ name }}</h3>
+<p class="maintext">{{ awesome }}<br />
+<div class="single">
+  <div class="thumbbig">
+          <div class="photo">
+              <img src="{{ photo }}">
+          </div>
+          <div class="social-media">
+              <a href="http://twitter.com/{{ twitter }}">
+                  <i class="icon-twitter-sign"></i>@{{twitter}}
+              </a> 
+              <a href="{{ linkedin }}">
+                  <i class="icon-linkedin-sign"></i>LinkedIn
+              </a> 
+          </div>
+  </div>
+  <div class="thumbdesc">
+      <div class="bio">
+          <p>{{ bio }}</p>
+      </div>
+  </div>
+</div>
+  <div class="container">  
+      
+      <div class="row" id="footer">
+      <h4>Let’s keep in touch</h4>
+      <ul>
+        <li><i class="icon-facebook-sign" style="color:#3B5998;"></i> facebook</li>
+        <li><i class="icon-twitter-sign" style="color:#1689B3"></i> twitter</li>
+        <li><i class="icon-linkedin-sign" style="color:#069"></i> linkedin</li>
+      </ul>
+      <p>&copy;2013 ZeroFund</p>
+      </div><!--end row-->      
+      </div><!--end container-->
+
+      <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+          <!-- For IE 7 and 8 Media Query Support -->    
+      <script type="text/javascript" src="assets/js/respond.js"></script>
+      <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+      <script src="assets/js/jquery.js"></script>
+      <script src="assets/js/bootstrap-collapse.js"></script>
+  </body>
+</html>
