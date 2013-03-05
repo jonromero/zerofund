@@ -45,7 +45,8 @@ Good luck!
     var name = 'Weather ex Machina';
     var url = 'http://weatherxm.com';
     // Initialize Parse
-    Parse.initialize("FNWbbpkez3ZSyErI3IEbOwrCeJsuxaNKnC14neT7", "SIAdJGSpRcVcwDao83Ruw0XPpe8GXSrbWr4Sz4lo");
+    Parse.initialize("JYMuDBI7N0AAcUhDNxgzXpIqACnfnjjAfp23NCf9", "TKjGwicQmKPAeIEHUEewtS4l925VcvKtecGFvRmM");
+
     $(function(){
         $('title').text('Back '+name+' on Zerofund!')
         // Parse objects
@@ -58,7 +59,14 @@ Good luck!
         query.equalTo("name", name);
         query.find({
             success: function(results) {
-                if (results.length>0) window.startup = results[0];
+                if (results.length>0)  {
+                  window.startup = results[0]; 
+
+                 // Show Backers and total amount
+                 window.statistics_query = new Parse.Query(Vote);
+                 statistics();
+
+                }
                 else {
                     window.startup = new Startup();
                     startup.set("name", name);
@@ -100,6 +108,8 @@ Good luck!
                                     $('#cta a').html('Thanks a lot!');
                                     statistics();
 
+                                    FB.init({appId: "332253330228095", status: true, cookie: true});
+
                                     // Facebook publisher
                                     FB.ui({
                                        method: 'feed',
@@ -107,7 +117,7 @@ Good luck!
                                        caption: "Stop talking! Support startups today!",
                                        description: $('#accordion p:first').text(),
                                        link: document.URL,
-                                       picture: $('#slider img:first').attr('src')
+                                       picture: window.location.href + $('#slider img:first').attr('src')
                                       },
                                       function(response) {console.log(response);
                                         if (response && response.post_id) {
@@ -246,7 +256,6 @@ Good luck!
 				<li><a href="https://www.facebook.com/weatherxm"><i class="icon-facebook"></i></a></li>
 				<li><a href="https://twitter.com/WeatherXM"><i class="icon-twitter"></i></a></li>
 				<li><a href="http://www.linkedin.com/company/2843441?trk=pro_other_cmpy"><i class="icon-linkedin"></i></a></li>
-				<li><a href="https://plus.google.com/116605502750494833554"><i class="icon-google-plus"></i></a></li>
 			</ul>
 			<!-- Social END -->
 			
@@ -289,22 +298,13 @@ Good luck!
 		<div id="main">
 		
 			<!-- Info -->
-			<div id="info">
-<div id="video" style="display:none;">
-<iframe src="http://player.vimeo.com/video/60787218?title=0&amp;byline=0&amp;portrait=0&amp;color=77bb44" width="440" height="248" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-</div>
-
-<div id="video" style="display:none;">
-<iframe src="http://player.vimeo.com/video/60787218?title=0&amp;byline=0&amp;portrait=0&amp;color=77bb44"  width="440" height="248" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-</div>
-
-<div id="video">
-<iframe src="http://player.vimeo.com/video/60787218?title=0&amp;byline=0&amp;portrait=0&amp;color=77bb44" width="440" height="248" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-</div>
-
-
+            
+            				<!-- Video -->
+				<div id="video">
+					<iframe src="http://player.vimeo.com/video/60787218?title=0&amp;byline=0&amp;portrait=0&amp;color=77bb44" width="440" height="248" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+				</div>
 				<!-- Video END -->
-				
+          	
 				<!-- Accordion -->
                 <!-- NOTE: tell us what is great about your product and your team -->
 				<div id="accordion">
@@ -443,8 +443,8 @@ Our funding goal is > €200k but every little bit helps.
 				<!-- Call to Action -->
 				<div id="cta">
                     <!-- NOTE: you define the call to action -->
-					<p>"Join the Weather Revolution!"</p>
-					<a href="#">Back this project <span>minimum pledge is $1</span></a>
+					<p>Join the Weather Revolution!</p>
+					<a href="#">Back this startup <span>minimum pledge is $10</span></a>
 				</div>
 				<!-- Call to Action END -->
 			</div>
@@ -469,10 +469,9 @@ Our funding goal is > €200k but every little bit helps.
 				<h3>Manolis Nikiforakis <span>IT Architect	</span></h3>
 				<p>BEng, MSc and 12 years work experience as software engineer, team leader &amp; IT project manager. Kitesurfer and wind seeker.</p>
 				<ul class="social">
-			      <li><a href="#"><i class="icon-facebook"></i></a></li>
-                        <li><a href="#"><i class="icon-twitter"></i></a></li>
-                        <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                        <li><a href="#"><i class="icon-google-plus"></i></a></li>
+                        <li><a href="https://twitter.com/nikil511"><i class="icon-twitter"></i></a></li>
+                        <li><a href="http://www.linkedin.com/in/mnikiforakis"><i class="icon-linkedin"></i></a></li>
+
 				</ul>
 				<div class="clearfix"></div>
 			</div>
@@ -486,10 +485,10 @@ Our funding goal is > €200k but every little bit helps.
 			    UX Poet</span>.<br>
 				</p>
 				<ul class="social">
-                  <li><a href="#"><i class="icon-facebook"></i></a></li>
-                        <li><a href="#"><i class="icon-twitter"></i></a></li>
-                        <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                        <li><a href="#"><i class="icon-google-plus"></i></a></li>
+                 
+                        <li><a href="https://twitter.com/eeVoskos"><i class="icon-twitter"></i></a></li>
+                        <li><a href="http://www.linkedin.com/in/stratostheodorou"><i class="icon-linkedin"></i></a></li>
+                        
                 </ul>
 				<div class="clearfix"></div>
 			</div>
@@ -501,11 +500,10 @@ Our funding goal is > €200k but every little bit helps.
 				<h3>Yiannis Gkoufas <span>Backend Developer</span></h3>
 				<p>BSc, MSc and 4 years of experience as a software engineer and java developer.<br>
 				  <span id="internal-source-marker_0.">Algorithms expert</span>.<br>
-			    <a href="#"><i class="icon-facebook"></i></a></p>
 				<ul class="social">
-                        <li><a href="#"><i class="icon-twitter"></i></a></li>
-                        <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                        <li><a href="#"><i class="icon-google-plus"></i></a></li>
+                        <li><a href="https://twitter.com/johngouf"><i class="icon-twitter"></i></a></li>
+                        <li><a href="http://www.linkedin.com/pub/yiannis-gkoufas/18/217/712"><i class="icon-linkedin"></i></a></li>
+                        
                 </ul>
 				<div class="clearfix"></div>
 			</div>
@@ -518,9 +516,6 @@ Our funding goal is > €200k but every little bit helps.
 				<p>Bring the energy and determination you’ve had all your life and together we will build something great!				</p>
 				<ul class="social">
                   <li></li>
-                  <li><a href="#"><i class="icon-twitter"></i></a></li>
-                        <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                        <li><a href="#"><i class="icon-google-plus"></i></a></li>
                 </ul>
 				<div class="clearfix"></div>
 			</div>
