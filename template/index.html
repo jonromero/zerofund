@@ -16,7 +16,15 @@ Good luck!
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Zerofund.org</title>
+<title>Weather ex Machina @ ZeroFund.org</title>
+<meta name="description" content="Weather ex Machina is a startup that tracks the performance of every weather forecast service in order to find the most accurate per location!">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<meta property="og:image" content="http://zerofund.org/startups/weatherxm/images/wxm-logo-circle-only.png"/>
+
+<meta property="og:title" content="Weather ex Machina @ ZeroFund.org"/>
+<meta property="og:site_name" content="WeatherXM"/>
+<meta property="og:description" content="Back Weather ex Machina on ZeroFund.org with (theoretical) money. WeatherXM is a briliant startup that tracks the performance of every weather forecast service in order to find the most accurate per location!"/>
+
 
 <!-- // Webfont -->
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,700,700italic,400italic">
@@ -42,10 +50,11 @@ Good luck!
 <script src="http://www.parsecdn.com/js/parse-1.1.15.min.js"></script>
 <script type="text/javascript">
     // NOTE: Modify the following values
-    var name = 'Awesome Startup';
-    var url = 'http://6pna.com';
+    var name = 'Weather ex Machina';
+    var url = 'http://weatherxm.com';
     // Initialize Parse
-    Parse.initialize("FNWbbpkez3ZSyErI3IEbOwrCeJsuxaNKnC14neT7", "SIAdJGSpRcVcwDao83Ruw0XPpe8GXSrbWr4Sz4lo");
+    Parse.initialize("JYMuDBI7N0AAcUhDNxgzXpIqACnfnjjAfp23NCf9", "TKjGwicQmKPAeIEHUEewtS4l925VcvKtecGFvRmM");
+
     $(function(){
         $('title').text('Back '+name+' on Zerofund!')
         // Parse objects
@@ -58,7 +67,14 @@ Good luck!
         query.equalTo("name", name);
         query.find({
             success: function(results) {
-                if (results.length>0) window.startup = results[0];
+                if (results.length>0)  {
+                  window.startup = results[0]; 
+
+                 // Show Backers and total amount
+                 window.statistics_query = new Parse.Query(Vote);
+                 statistics();
+
+                }
                 else {
                     window.startup = new Startup();
                     startup.set("name", name);
@@ -100,6 +116,8 @@ Good luck!
                                     $('#cta a').html('Thanks a lot!');
                                     statistics();
 
+                                    FB.init({appId: "332253330228095", status: true, cookie: true});
+
                                     // Facebook publisher
                                     FB.ui({
                                        method: 'feed',
@@ -107,7 +125,7 @@ Good luck!
                                        caption: "Stop talking! Support startups today!",
                                        description: $('#accordion p:first').text(),
                                        link: document.URL,
-                                       picture: $('#slider img:first').attr('src')
+                                       picture: window.location.href + $('#slider img:first').attr('src')
                                       },
                                       function(response) {console.log(response);
                                         if (response && response.post_id) {
@@ -223,6 +241,8 @@ Good luck!
         });
     }
 </script>
+
+
 </head>
 
 <body>
@@ -241,12 +261,12 @@ Good luck!
 			<!-- Logo END -->
 		
 			<!-- Social -->
+
             <!-- NOTE: ADD LINKS TO YOUR SOCIAL MEDIA -->
 			<ul class="social">
-				<li><a href="#"><i class="icon-facebook"></i></a></li>
-				<li><a href="#"><i class="icon-twitter"></i></a></li>
-				<li><a href="#"><i class="icon-linkedin"></i></a></li>
-				<li><a href="#"><i class="icon-google-plus"></i></a></li>
+				<li><a href="https://www.facebook.com/weatherxm"><i class="icon-facebook"></i></a></li>
+				<li><a href="https://twitter.com/WeatherXM"><i class="icon-twitter"></i></a></li>
+				<li><a href="http://www.linkedin.com/company/2843441?trk=pro_other_cmpy"><i class="icon-linkedin"></i></a></li>
 			</ul>
 			<!-- Social END -->
 			
@@ -261,14 +281,12 @@ Good luck!
 			<!-- Slider -->
             <!-- NOTE: add images of your company and/or product -->
 			<div id="slider" class="nivoSlider">
-				<img src="images/dummy-slide-1.png" alt="" title="#slider-caption">
-				<img src="images/dummy-slide-1.png" alt="" title="#slider-caption">
-				<img src="images/dummy-slide-1.png" alt="" title="#slider-caption">
-				<img src="images/dummy-slide-1.png" alt="" title="#slider-caption">
+				<img src="images/dummy-slide-1.png" alt="Yes, sky is the limit, but knowning the weather will help..." title="#slider-caption">
+				<img src="images/dummy-slide-2.png" alt="Yes, sky is the limit, but knowning the weather will help..." title="#slider-caption">
 			</div>
 			<div id="slider-caption" class="nivo-html-caption">
                 <!-- NOTE: appeal to backers! -->
-				<p>We have the ideas, you have the money.<br/> <span>Help us by backing our great project today!</span></p>
+				<p>Whatever the weather, we’ve got you covered.<br/> <span>hyper-local. ultra-reliable.</span></p>
 			</div>
 			<!-- Slider END -->
 			
@@ -291,85 +309,126 @@ Good luck!
 		<div id="main">
 		
 			<!-- Info -->
-			<div id="info">
-				
-				<!-- Video -->
+            	<div id="info">
+            				<!-- Video -->
 				<div id="video">
-					<iframe src="http://player.vimeo.com/video/23534361?title=0&amp;byline=0&amp;portrait=0&amp;color=77bb44" width="440" height="248" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+					<iframe src="http://player.vimeo.com/video/61167274?title=0&amp;byline=0&amp;portrait=0&amp;color=77bb44" width="440" height="248" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 				</div>
 				<!-- Video END -->
-				
+          	
 				<!-- Accordion -->
                 <!-- NOTE: tell us what is great about your product and your team -->
 				<div id="accordion">
 
 					<!-- Item 1 -->
 					<div>
-						<h2>About our great project</h2>
+						<h2>The Pitch</h2>
 						<div>
-							<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti.</p>
-							<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis. Maecenas consequat faucibus elit. Aenean elit mauris, luctus id, gravida ut, iaculis eu, urna. Morbi eros augue, dapibus eu, accumsan ut, cursus ac, magna.</p>
-							<p>Nam facilisis dui at nunc. Suspendisse potenti. Aliquam elit. Sed accumsan. Phasellus orci. Phasellus ac est vel dolor pharetra pulvinar. Curabitur scelerisque feugiat velit. Ut feugiat tincidunt felis.</p>
+						  <p>If   you check the weather from different services, you often see   contradicting forecasts for the same location. One says it will rain   while another one says it will be sunny. Who do you trust? None of these services will tell you how accurate their predictions are! <br>That&rsquo;s where we come in.<br>
+                            </p>
+<h3>Weather  ex Machina, tracks the performance of every weather forecast service.  It&rsquo;s a system that continuously monitors their every single forecast and   compares it to the actual conditions.</h3> 
+                        <p> As a result, we can tell you, &ldquo;out of ALL THESE forecasting services, THIS ONE has the best accuracy for YOUR location, so this is the one you should trust&rdquo;.<br><br>
+						
+                            In   order to do this, we use real time data from thousands of public   weather stations - but we don't stop there. We are developing a unique   mobile app that will collect your own weather data using a number of   techniques, essentially turning your mobile phone into a weather   station. We use this info to make even better personalized predictions   for you and the people around you.<br><br>
+                        
+                            By   using existing underutilized data, cutting-edge technology and   unexploited approaches, we provide personalized hyper-local, weather   forecasts of unmatched accuracy.<br>
+						  </p>
 						</div>
 					</div>
 					<!-- Item 1 END -->
 					
-					<!-- Item 2 -->
+                    
+                    <!-- Item 1 -->
 					<div>
-						<h2>Features</h2>
+						<h2>The Service</h2>
 						<div>
-							<article class="featureitem">
-								
-								<h3>Lorem ipsum dolor</h3>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis.</p>
-							</article>
-							<article class="featureitem">
-								
-								<h3>Lorem ipsum dolor</h3>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis.</p>
-							</article>
-							<article class="featureitem">
-								
-								<h3>Lorem ipsum dolor</h3>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis.</p>
-							</article>
-							<article class="featureitem">
-							
-								<h3>Lorem ipsum dolor</h3>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis.</p>
-							</article>
-							<article class="featureitem">
-								
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis.</p>
-							</article>
+                          <p>We have created a service that aggregates and compares third-party forecasts with real-time weather conditions coming from meteorological stations, in order to measure forecasting accuracy per location and forecasting agency. We have concluded that some forecasting agencies persistently perform better than others on specific locations (and/or weather conditions) and we believe information like this can be further explored and yield in to new, innovative products.                            </p>
+                          <p>These are some screenshots from our operational server, which monitors multiple forecasting agencies for a number of worldwide locations. What you see here, is a synthetic plot of temperature forecasts, that were published on each company’s website 5 days before the actual date-time. You can also see the actual temperature (WUNDER_ACTUAL) as recorded 5 days later by a public meteorological station in the exact location. The number next to each provider’s name is the root mean square average error of the specific time window.</p>
+                          <p><a href="#"><img src="images/thessaloniki.jpg" width="440" height="228" onclick="window.open(this.src)"></a> &nbsp;&nbsp;&nbsp; <a href="#"><img src="images/newyork.jpg" width="440" height="228" onclick="window.open(this.src)"></a></p>
+                          
+                          <p><br><h4>To put it simply, if you wish to know the weather 5 days ahead for Thessaloniki you should trust freemeteo, but if you are interested in the weather of west New York, freemeteo is the last weather company you should trust.</h4><br>
+                          </p>
 						</div>
 					</div>
+					<!-- Item 1 END -->
+                    
+                    
+                      <!-- Item 2 -->
+                      
+					<div>
+						<h2>The App</h2>
+						<div>
+                          <p>
+                    Casual users will probably be overwhelmed with charts and errors figures that our server generates, hence we are developing a smartphone app, that hides the complexity and displays the most important information in a user-friendly manner. 
+                    
+                    </p>
+                    <p><img src="images/mockups.png"></p>
+                     <p>
+                    Our app also acts as a weather forecast aggregator, so you can easily see all the forecasts (of many popular agencies) for your location of interest and get a quick glimpse if they all agree or not and how the weather is going to be like. When you get contradicting forecasts, (which is quite often) our system will identify the most accurate forecast based on previous performance in your location, so you can plan ahead with confidence.</p>
+                          <p><strong>Is that all? Have we cracked the weather forecast?</strong><br>
+In order to measure the forecast accuracy we need actual, real-time conditions from meteorological stations. Those are limited to a few thousand places worldwide, (public and private) so is it impossible to apply our concept in places where no such stations exist, like a beach with a microclimate ? </p>
+                            <p><strong>Almost...once we have established a substantial user base we will add some unique methods for generating our own weather data to correlate with the forecasts in locations were no previous data existin</strong>g. Those methods are:
+							</p>
+                              <article class="featureitem">
+                                <h3>Crowdsourcing weather observations</h3>
+                                  <p>
+                              We are planning to crowdsource weather observations, using gamification techniques to engage users. e.g. this company said 5 days ago, that it will now rain in your place! what do you say.
+                              </p>
+                            </article>
+                            
+						  <article class="featureitem">
+                                  <h3>User generated forecasts</h3>
+                            <p>
+                              We can even motivate users to publish their own forecasts, and compete against the professionals, as mean to keep them engaged and provide even more weather observations. </p>
+							  </article>
+                        <article class="featureitem">
+                                  <h3>Hardware sensors</h3>
+                            <p>
+                            We will use mobile phones’ internal sensors (such as Barometer existing in many high-end smartphones) to collect even more data, and we will wirelessly connect to external weather sensor hardware, that users may already own or purchase from us. (Actually we have designed our own cost-efficient, solid, compact weather station that connects over bluetooth with your smartphone, but that’s for later)
+ </p>
+ </article>
+                      
+                      </div>
+					</div>
 					<!-- Item 2 END -->
+                    
+                                      <!-- Item 1 -->
+					<div>
+						<h2>The Company</h2>
+						<div>
+                          <p>
+                    We want to make sure that we become a real company rather than a group of geeks with a great idea, and a prototype. We are really proud of the work we’ve done so far, and believe that our idea is simple but the implementation is difficult. That is why we have joined the <a href="http://www.metavallon.org/">Metavallon</a> incubator which is helping us with all the startup issues we face daily, and that is why we ask for your support through various competitions we participate, like this one.<br><br>
+
+At the end of this zerofund phase II, there is going to be a pitch-party were all backers are invited. There you will have a chance to put some real money in to our startup. A sum of 700€ is required for every startup to enter zerofund's next phase. That money will not reach us directly, but will go to zerofund and colab for pizza, coffee, cloud resources etc.<br><br>
+
+We aim for the mindthebridge prize in order to extent our experience in silicon valley. We have visited the startup Mecca before, and we appreciate the value in learning, networking and getting feedback there! We will use their support and funding, to speed up our progress, get access to commercial weather data, get more server resources in the cloud, and build the best-accuracy weather service ever made :-) <br><br>
+
+
+                    </p>
+						</div>
+					</div>
+					<!-- Item 1 END -->
+                    
+                   
 					
 					<!-- Item 3 -->
 					<div>
 						<h2>FAQ</h2>
 						<div>
 							<article class="faqitem">
-								<h3><i class="icon-question-sign"></i>Is this is a question?</h3>
-								<p>Yep! And this is the answer! Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum.</p>
+								<h3><i class="icon-question-sign"></i>How can you compete with existing, massive meteorological companies?</h3>
+								<p>We are not running meteorological models, we do not directly compete with them, we collect what they produce, and work on top of it to further improve the results.</p>
 							</article>
+                            							<article class="faqitem">
+								<h3><i class="icon-question-sign"></i>Is it legal to use all these weather data and publish conclusions about companies' forecast accuracy per location?</h3>
+								<p>We use free weather data from governmental agencies, and private/commercial ones from companies that sell them with specific licence agreement which we do not violate. We treat all forecasting providers equally and try not to discredit anyone (hence we will not publish countrywide statistics etc.) However, we do understand that our startup is quite disturbing, and some turbulence might occur.</p>
+							</article>
+
 							<article class="faqitem">
-								<h3><i class="icon-question-sign"></i>Is this is a question?</h3>
-								<p>Yep! And this is the answer! Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum.</p>
+								<h3><i class="icon-question-sign"></i>So, once I find out which agency performs the best in my location, I do not need your app any more, right?</h3>
+								<p>We have seen that accuracy persistence is shifting through time/seasons. Also companies might modify their forecasting models at anytime, hence the continuous use of our service is required in order to always get the best results. </p>
 							</article>
-							<article class="faqitem">
-								<h3><i class="icon-question-sign"></i>Is this is a question?</h3>
-								<p>Yep! And this is the answer! Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum.</p>
-							</article>
-							<article class="faqitem">
-								<h3><i class="icon-question-sign"></i>Is this is a question?</h3>
-								<p>Yep! And this is the answer! Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum.</p>
-							</article>
-							<article class="faqitem">
-								<h3><i class="icon-question-sign"></i>Is this is a question?</h3>
-								<p>Yep! And this is the answer! Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum.</p>
-							</article>
+
 						</div>
 					</div>
 					<!-- Item 3 END -->
@@ -381,43 +440,32 @@ Good luck!
 						<h2>News</h2>
 						<div>
 							<article class="newsitem">
-								<h3><i class="icon-comment-alt"></i><a href="#">Lorem ipsum dolor sit amet</a> <span>August 22nd 2012</span></h3>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti.</p>
-							</article>
-							<article class="newsitem">
-								<h3><i class="icon-comment-alt"></i><a href="#">Lorem ipsum dolor sit amet</a> <span>August 22nd 2012</span></h3>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti.</p>
-							</article>
-							<article class="newsitem">
-								<h3><i class="icon-comment-alt"></i><a href="#">Lorem ipsum dolor sit amet</a> <span>August 22nd 2012</span></h3>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti.</p>
-							</article>
-							<article class="newsitem">
-								<h3><i class="icon-comment-alt"></i><a href="#">Lorem ipsum dolor sit amet</a> <span>August 22nd 2012</span></h3>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti.</p>
-							</article>
-							<article class="newsitem">
-								<h3><i class="icon-comment-alt"></i><a href="#">Lorem ipsum dolor sit amet</a> <span>August 22nd 2012</span></h3>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dui odio, euismod vel, hendrerit nonummy, molestie quis, erat. Sed ac mauris quis tortor ultrices rutrum. Suspendisse potenti.</p>
-							</article>
+<br>We are currently working on our android app. To stay tuned for more visit our website <a href="http://weatherxm.com/">WeatherXM.com</a> or like our <a href="http://www.fb.com/weatherxm">facebook page</a>.
+ <iframe src="https://www.facebook.com/plugins/like.php?href=www.facebook.com/weatherxm" style="border:none; text-align:right; width:450px; height:80px" scrolling="no" frameborder="0"></iframe>
+
+			
+ </article>
 						</div>
 					</div>
 					<!-- Item 4 END -->
 					
 				</div>
 				<!-- Accordion END -->
+
+						
 				
 			</div>
-			<!-- Info END -->
-			
-			<!-- Pledge -->
+			<p><!-- Info END -->
+			  
+			  <!-- Pledge -->
+		  </p>
 			<div id="pledge">
 			
 				<!-- Call to Action -->
 				<div id="cta">
                     <!-- NOTE: you define the call to action -->
-					<p>"Shut up and take my money!"</p>
-					<a href="#">Back this project <span>minimum pledge is $1</span></a>
+					<p>Join the Weather Revolution!</p>
+					<a href="#">Back WeatherXM <span>minimum pledge is 341 Δρχ (1€)</span></a>
 				</div>
 				<!-- Call to Action END -->
 			</div>
@@ -438,14 +486,13 @@ Good luck!
 		    <!-- NOTE: Tell us about your team! -->
 			<!-- Team Box 1 -->
 			<div class="teambox">
-				<img src="images/dummy-teamster.gif" alt="">
-				<h3>John Doe <span>CEO</span></h3>
-				<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis. Maecenas consequat faucibus elit. Aenean elit mauris, luctus id, gravida ut, iaculis eu, urna. Morbi eros augue, dapibus eu, accumsan ut, cursus ac, magna.</p>
+				<img src="images/manolis.jpg" alt="">
+				<h3>Manolis Nikiforakis <span>Developer - IT Architect</span></h3>
+				<p>BEng, MSc and 12 years work experience as software engineer, team leader &amp; IT project manager. Kitesurfer and wind seeker.</p>
 				<ul class="social">
-					    <li><a href="#"><i class="icon-facebook"></i></a></li>
-                        <li><a href="#"><i class="icon-twitter"></i></a></li>
-                        <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                        <li><a href="#"><i class="icon-google-plus"></i></a></li>
+                        <li><a href="https://twitter.com/nikil511"><i class="icon-twitter"></i></a></li>
+                        <li><a href="http://www.linkedin.com/in/mnikiforakis"><i class="icon-linkedin"></i></a></li>
+
 				</ul>
 				<div class="clearfix"></div>
 			</div>
@@ -453,14 +500,16 @@ Good luck!
 			
 			<!-- Team Box 2 -->
 			<div class="teambox">
-				<img src="images/dummy-teamster.gif" alt="">
-				<h3>Jane Smith <span>Design</span></h3>
-				<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis. Maecenas consequat faucibus elit. Aenean elit mauris, luctus id, gravida ut, iaculis eu, urna. Morbi eros augue, dapibus eu, accumsan ut, cursus ac, magna.</p>
+				<img src="images/stratos.jpg" alt="">
+				<h3>Stratos Theodorou<span>Android Developer - UI/UX</span></h3>
+				<p>MEng, MSc and 4 years of work experience as a software engineer, android developer and UI designer. <span id="internal-source-marker_0.3816004737176143"><br>
+			    UX Poet</span>.<br>
+				</p>
 				<ul class="social">
-                        <li><a href="#"><i class="icon-facebook"></i></a></li>
-                        <li><a href="#"><i class="icon-twitter"></i></a></li>
-                        <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                        <li><a href="#"><i class="icon-google-plus"></i></a></li>
+                 
+                        <li><a href="https://twitter.com/eeVoskos"><i class="icon-twitter"></i></a></li>
+                        <li><a href="http://www.linkedin.com/in/stratostheodorou"><i class="icon-linkedin"></i></a></li>
+                        
                 </ul>
 				<div class="clearfix"></div>
 			</div>
@@ -468,14 +517,14 @@ Good luck!
 			
 			<!-- Team Box 3 -->
 			<div class="teambox">
-				<img src="images/dummy-teamster.gif" alt="">
-				<h3>Paul Andrews <span>Code</span></h3>
-				<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis. Maecenas consequat faucibus elit. Aenean elit mauris, luctus id, gravida ut, iaculis eu, urna. Morbi eros augue, dapibus eu, accumsan ut, cursus ac, magna.</p>
+				<img src="images/yiannis.jpg" alt="">
+				<h3>Yiannis Gkoufas <span>Backend Developer</span></h3>
+				<p>BSc, MSc and 4 years of experience as a software engineer and java developer.<br>
+				  <span id="internal-source-marker_0.">Algorithms expert</span>.<br>
 				<ul class="social">
-                        <li><a href="#"><i class="icon-facebook"></i></a></li>
-                        <li><a href="#"><i class="icon-twitter"></i></a></li>
-                        <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                        <li><a href="#"><i class="icon-google-plus"></i></a></li>
+                        <li><a href="https://twitter.com/johngouf"><i class="icon-twitter"></i></a></li>
+                        <li><a href="http://www.linkedin.com/pub/yiannis-gkoufas/18/217/712"><i class="icon-linkedin"></i></a></li>
+                        
                 </ul>
 				<div class="clearfix"></div>
 			</div>
@@ -483,14 +532,11 @@ Good luck!
 			
 			<!-- Team Box 4 -->
 			<div class="teambox">
-				<img src="images/dummy-teamster.gif" alt="">
-				<h3>Stacey Parker <span>Online Marketing</span></h3>
-				<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lacus dolor, viverra vel, lacinia sit amet, suscipit sed, felis. Maecenas consequat faucibus elit. Aenean elit mauris, luctus id, gravida ut, iaculis eu, urna. Morbi eros augue, dapibus eu, accumsan ut, cursus ac, magna.</p>
+				<img src="images/kenny.gif" alt="">
+				<h3>You?<span>Designer / Developer / Data Scientist / Meteorologist</span></h3>
+				<p>Bring the energy and determination you’ve had all your life and together we will build something great!				</p>
 				<ul class="social">
-                        <li><a href="#"><i class="icon-facebook"></i></a></li>
-                        <li><a href="#"><i class="icon-twitter"></i></a></li>
-                        <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                        <li><a href="#"><i class="icon-google-plus"></i></a></li>
+                  <li></li>
                 </ul>
 				<div class="clearfix"></div>
 			</div>
@@ -504,8 +550,10 @@ Good luck!
 		
 		<!-- Footer -->
 		<Footer id="footer">
+			 <iframe src="https://www.facebook.com/plugins/like.php?href=www.facebook.com/weatherxm" style="border:none; text-align:right; width:450px; height:80px" scrolling="no" frameborder="0"></iframe>
+			
 			<!-- As long as you use the default icons of this theme you are NOT allowed to change the "Some icons by icons8.com" text/link or to deleted it. The author of the icons needs to be attributed! -->
-			<p>Copyright 2013 backthis.</p>
+			<p>Copyright 2013 WeatherXM.com</p>
 		</Footer>
 		<!-- Footer END -->
 		
@@ -546,7 +594,26 @@ Good luck!
      js.src = "http://connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
      ref.parentNode.insertBefore(js, ref);
    }(document, /*debug*/ false));
-</script>
+
+   
+   
+   
+   
+
+  var _gaq = _gaq || [];
+  var pluginUrl ='//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-33099415-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+  
+   </script>
 
 
 </body>
