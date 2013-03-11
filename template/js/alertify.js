@@ -26,6 +26,7 @@
 				cancel : "<a href=\"#\" class=\"alertify-button alertify-button-cancel\" id=\"alertify-cancel\">{{cancel}}</a>"
 			},
 			input   : "<div class=\"alertify-text-wrapper\"><input type=\"text\" class=\"alertify-text\" id=\"alertify-text\"></div>",
+			pass  : "<div class=\"alertify-text-wrapper\"><input type=\"password\" class=\"alertify-text\" id=\"alertify-text\"></div>",
 			message : "<p class=\"alertify-message\">{{message}}</p>",
 			log     : "<article class=\"alertify-log{{class}}\">{{message}}</article>"
 		};
@@ -215,17 +216,18 @@
 
 				html += "<div class=\"alertify-dialog\">";
 
-				if (type === "prompt") html += "<form id=\"alertify-form\">";
+				if (type === "prompt" || type === "pass") html += "<form id=\"alertify-form\">";
 
 				html += "<article class=\"alertify-inner\">";
 				html += dialogs.message.replace("{{message}}", message);
 
 				if (type === "prompt") html += dialogs.input;
+				if (type === "pass") html += dialogs.pass;
 
 				html += dialogs.buttons.holder;
 				html += "</article>";
 
-				if (type === "prompt") html += "</form>";
+				if (type === "prompt" || type === "pass") html += "</form>";
 
 				html += "<a id=\"alertify-resetFocus\" class=\"alertify-resetFocus\" href=\"#\">Reset Focus</a>";
 				html += "</div>";
@@ -236,6 +238,7 @@
 					html = html.replace("{{ok}}", this.labels.ok).replace("{{cancel}}", this.labels.cancel);
 					break;
 				case "prompt":
+				case "pass":
 					html = html.replace("{{buttons}}", this.appendButtons(dialogs.buttons.cancel, dialogs.buttons.submit));
 					html = html.replace("{{ok}}", this.labels.ok).replace("{{cancel}}", this.labels.cancel);
 					break;
@@ -371,9 +374,12 @@
 					// This ensure it doens't block any element from being clicked
 					transitionDone = function (event) {
 						event.stopPropagation();
-						elDialog.className += " alertify-isHidden";
-						// unbind event so function only gets called once
-						self.unbind(elDialog, self.transition, transitionDone);
+						event.stopPropagation();
+						if (elDialog.className.indexOf("alertify-hidden")>0) {
+						    elDialog.className += " alertify-isHidden";
+	    					// unbind event so function only gets called once
+   						    self.unbind(elDialog, self.transition, transitionDone);
+						}
 					};
 					// whether CSS transition exists
 					if (typeof this.transition !== "undefined") {
@@ -566,6 +572,7 @@
 			init    : _alertify.init,
 			log     : function (message, type, wait) { _alertify.log(message, type, wait); return this; },
 			prompt  : function (message, fn, placeholder, cssClass) { _alertify.dialog(message, "prompt", fn, placeholder, cssClass); return this; },
+			pass  : function (message, fn, placeholder, cssClass) { _alertify.dialog(message, "pass", fn, placeholder, cssClass); return this; },
 			success : function (message, wait) { _alertify.log(message, "success", wait); return this; },
 			error   : function (message, wait) { _alertify.log(message, "error", wait); return this; },
 			set     : function (args) { _alertify.set(args); },
